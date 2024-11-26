@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -10,12 +11,14 @@ import { FaCalendarAlt } from "react-icons/fa";
 
 const InfoScreen = () => {
   const navigate = useNavigate();
+  const [sucessMsg, setSuccessMsg] = useState("");
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitSuccessful },
     register,
   } = useForm({
+    mode: "onChange",
     defaultValues: {
       bvn: "",
       nin: "",
@@ -23,8 +26,8 @@ const InfoScreen = () => {
     },
   });
 
-  const onSubmit = (data: any) => {
-    console.log("Submitted Data:", data);
+  const onSubmit = () => {
+    setSuccessMsg("You have successfully verified your bvn");
   };
 
   return (
@@ -39,6 +42,11 @@ const InfoScreen = () => {
             </h2>
           </div>
           <form onSubmit={handleSubmit(onSubmit)}>
+            {isSubmitSuccessful && (
+              <div className="bg-green-100 text-center rounded-lg my-4 p-4 text-green-500">
+                <p>{sucessMsg}</p>
+              </div>
+            )}
             <div className="flex flex-col mb-4">
               <label htmlFor="bvn" className="font-medium pb-3">
                 BVN
@@ -99,7 +107,8 @@ const InfoScreen = () => {
                 Cancel
               </button>
               <button
-                className="bg-blue-500 text-white w-full p-3 rounded-lg"
+                // disabled={!isValid}
+                className="bg-blue-500  text-white w-full p-3 rounded-lg"
                 type="submit"
               >
                 Verify BVN
